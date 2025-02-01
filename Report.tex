@@ -1,0 +1,194 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Line Follower and Obstacle Avoidance Robot*\\
+{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and should not be used}
+}
+
+\author{\IEEEauthorblockN{Khushal Khan}
+\IEEEauthorblockA{\textit{Computer Engineering} \\
+\textit{Ghulam Ishaq Khan Institute of Engineering Sciences and Technology}\\
+Topi, Swabi, Pakistan \\
+kkhushal83@gmail.com}
+\and
+\IEEEauthorblockN{Noshair Imtiaz}
+\IEEEauthorblockA{\textit{Computer Engineering} \\
+\textit{Ghulam Ishaq Khan Institute of Engineering Sciences and Technology}\\
+Topi, Swabi, Pakistan \\
+noshair231@gmail.com}
+\and
+\IEEEauthorblockN{Saad Siddique}
+\IEEEauthorblockA{\textit{Computer Engineering} \\
+\textit{Ghulam Ishaq Khan Institute of Engineering Sciences and Technology}\\
+Topi, Swabi, Pakistan \\
+saadsiddique@gmail.com}
+}
+
+\maketitle
+
+\begin{abstract}
+This project involves the design and implementation of a versatile robotic system capable of line following and obstacle avoidance. Utilizing an Arduino Uno, 8051 microcontroller, IR sensors, H-bridge motor driver (L293D), and HC-SR04 Ultrasonic Sonar sensor, we have constructed a smart robot car capable of navigating through diverse scenarios. The robot's functionality includes following predefined paths, autonomously avoiding obstacles, and adjusting its direction based on sensor inputs. For testing purposes, a 9V battery was used, with 5V going to the Arduino Uno and the remaining voltage to the motors.
+
+This paper provides an overview of the project, detailing the methodology, components used, and the working principles of each functionality. Additionally, we present the connections and usage of the L293D motor driver for efficient motor control. The paper concludes with the successful demonstration of the robot's capabilities in controlled environments and discusses potential future enhancements.
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+Robotics, Line Follower, Obstacle Avoidance, Arduino Uno, Smart Robot Car.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Robotic systems with the ability to navigate and adapt to their environment are crucial in various fields. This project focuses on the development of a multi-functional robot capable of line following and obstacle avoidance. Leveraging the power of an Arduino Uno, 8051 microcontroller, and a set of sensors and actuators, our robot demonstrates intelligent behavior in different scenarios. For testing purposes, a 9V battery was used, with 5V going to the Arduino Uno and the remaining voltage to the motors.
+
+In the course of this project, an H-bridge motor driver (L293D) played a crucial role in controlling the motors efficiently. This paper provides a detailed account of our approach, the components used, and the successful implementation of line following and obstacle avoidance functionalities. The introduction of the L293D motor driver for effective motor control is discussed, providing a comprehensive view of our robot's design.
+
+\section{Literature Review}
+The literature on robotics, specifically in line following and obstacle avoidance, highlights the significance of employing infrared sensors and ultrasonic sensors. In line following, the utilization of IR sensors for surface detection and navigation is a well-established practice. Similarly, obstacle avoidance systems often integrate ultrasonic sensors to assess the surroundings and make decisions based on detected obstacles. These methodologies serve as a foundation for our project, guiding the selection and implementation of sensors for each functionality.
+
+\section{Methodology}
+\subsection{Line Following Mechanism}
+To enable the robot to follow a line, we have incorporated two IR sensors. The right IR sensor is connected to port 2, and the left IR sensor is connected to port 3 of the Arduino Uno. These sensors are strategically placed at the front of the robot to detect a black line on a contrasting surface.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{line_following_setup.png}
+    \caption{Line Following Mechanism with IR Sensors.}
+    \label{fig:line_following}
+\end{figure}
+
+The working principle involves the detection of the line using IR sensors. The Arduino Uno processes the sensor data and controls the motors through an H-bridge (L293D). The H-bridge is necessary because the motors require a higher voltage (9V) than the Arduino Uno can directly provide (5V). The connections for the L293D motor driver are summarized in Table~\ref{tab:l293d_connections}.
+
+\begin{table}[H]
+    \caption{L293D Motor Driver Connections}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{L293D Pin} & \textbf{Arduino Pin} \\
+            \hline
+            Enable A (Right Motor) & 10 \\
+            \hline
+            Enable B (Left Motor) & 5 \\
+            \hline
+            Input 4 (Right Motor) & 9 \\
+            \hline
+            Input 3 (Right Motor) & 8 \\
+            \hline
+            Input 2 (Left Motor) & 7 \\
+            \hline
+            Input 1 (Left Motor) & 6 \\
+            \hline
+        \end{tabular}
+        \label{tab:l293d_connections}
+    \end{center}
+\end{table}
+
+\subsection{Line Following Logic}
+The line following logic is implemented based on the states of the right and left IR sensors. The behavior is as follows:
+
+\begin{table}[H]
+    \caption{Line Following Logic}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Right IR Sensor} & \textbf{Left IR Sensor} & \textbf{Right Motor} & \textbf{Left Motor} \\
+            \hline
+            LOW & LOW & Backward & Forward \\
+            \hline
+            HIGH & LOW & Backward & Forward \\
+            \hline
+            LOW & HIGH & Forward & Backward \\
+            \hline
+            HIGH & HIGH & Stop & Stop \\
+            \hline
+        \end{tabular}
+        \label{tab:line_following_logic}
+    \end{center}
+\end{table}
+
+\subsection{Obstacle Avoidance System}
+The obstacle avoidance system relies on an HC-SR04 Ultrasonic Sonar sensor. The trig pin of the sensor is connected to port 11, and the echo pin is connected to port 12 of the Arduino Uno.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{obstacle_avoidance_setup.png}
+    \caption{Obstacle Avoidance System with Ultrasonic Sensor.}
+    \label{fig:obstacle_avoidance}
+\end{figure}
+
+\begin{table}[H]
+    \caption{Obstacle Avoidance Functionality}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{Condition} & \textbf{Action} \\
+            \hline
+            Obstacle Detected & Stop, Reverse, and Change Direction \\
+            \hline
+        \end{tabular}
+        \label{tab:obstacle_avoidance}
+    \end{center}
+\end{table}
+
+When an obstacle is detected, the robot stops, reverses for a short duration, and then navigates in the direction with the most clearance. The motors are controlled by the Arduino Uno through the L293D motor driver to achieve these movements effectively.
+
+\section{Results}
+The robot successfully demonstrated the intended functionalities in controlled environments. Line following and obstacle avoidance were achieved with precision. The integration of these features allows the robot to navigate through diverse scenarios autonomously.
+
+\subsection{Line Following Mechanism}
+Figure~\ref{fig:line_following_image} shows the robot in action while following a predefined line.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{line_following_image.png}
+    \caption{Robot in Action: Line Following.}
+    \label{fig:line_following_image}
+\end{figure}
+
+\subsection{Obstacle Avoidance System}
+Figure~\ref{fig:obstacle_avoidance_image} depicts the robot successfully avoiding an obstacle.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{obstacle_avoidance_image.png}
+    \caption{Robot in Action: Obstacle Avoidance.}
+    \label{fig:obstacle_avoidance_image}
+\end{figure}
+
+\subsection{Circuit Diagram and L293D Motor Driver}
+Figure~\ref{fig:circuit_diagram} presents the circuit diagram of the robot, highlighting the L293D motor driver connections.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{Circuit.png.png}
+    \caption{Robot Circuit Diagram with L293D Motor Driver.}
+    \label{fig:circuit_diagram}
+\end{figure}
+
+\section{Discussion}
+The successful implementation of line following and obstacle avoidance showcases the versatility of the robotic system. The chosen sensors and actuators effectively contribute to the intelligence and adaptability of the robot. Future improvements may include enhancements to the control algorithm for more sophisticated behaviors.
+
+\section{Conclusion}
+In conclusion, the development of a multi-functional robot with line following and obstacle avoidance capabilities has been successfully demonstrated. The integration of Arduino Uno, IR sensors, L293D motor driver, and HC-SR04 Ultrasonic Sonar sensor has resulted in an intelligent robotic system with practical applications in various fields.
+
+\section*{References}
+\begin{thebibliography}{1}
+\bibitem{instructables}
+Instructables. "Obstacle Avoiding Robot - Arduino." \url{https://www.instructables.com/Obstacle-Avoiding-Robot-Arduino-1/}
+
+\bibitem{circuitdigest}
+Circuit Digest. "Arduino Uno Line Follower Robot." \url{https://circuitdigest.com/microcontroller-projects/arduino-uno-line-follower-robot}
+\end{thebibliography}
+
+\end{document}
